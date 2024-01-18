@@ -1,0 +1,19 @@
+{
+  "name": "realstateproject",
+  "version": "1.0.1",
+  "description": "A Real-Estate Web Application for Buying,Selling and Renting a property",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js"
+  },
+  "keywords": [],
+  "author": "Praveen Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.1.0"
+  }
+}
