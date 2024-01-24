@@ -9,12 +9,15 @@ const userSchema = new mongoose.Schema({
     },
     email:{
         type: 'string',
-        required: true,
         unique: true
     },
     password:{
         type: 'string',
         required: true
+    },
+    avatar:{
+        type: 'string',
+        default:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1200px-Circle-icons-profile.svg.png'
     },
 },{timestamps: true});
 

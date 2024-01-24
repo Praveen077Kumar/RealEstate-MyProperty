@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose'
 import dotenv from 'dotenv';
 import cors from 'cors'
+
 const corsOptions ={
    origin:'*', 
    credentials:true,            //access-control-allow-credentials:true

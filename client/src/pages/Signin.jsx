@@ -6,6 +6,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
+import Oauth from "../components/Oauth";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
@@ -61,10 +62,11 @@ const SignIn = () => {
         />
         <button
           disabled={loading}
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-70 disabled:opacity-60"
+          className="bg-slate-800 text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:opacity-60"
         >
           {loading ? "Loading..." : "Sign in"}
         </button>
+        <Oauth></Oauth>
       </form>
       <div className="flex gap-2 mt-5">
         <p>Don't have an account ?</p>
