@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose'
 import dotenv from 'dotenv';
 import cors from 'cors'
+import cookieParser from 'cookie-parser';
 
 const corsOptions ={
    origin:'*', 
@@ -21,6 +22,8 @@ mongoose.connect(process.env.MONGO).then(()=>{
 }).catch(err => console.log(err));
 
 const app = express();
+
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors(corsOptions));
 
