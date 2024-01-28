@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useState, useEffect } from "react";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 import {
   getStorage,
   ref,
@@ -28,7 +28,9 @@ const Profile = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showListingError, setListingError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
   useEffect(() => {
     if (file) {
@@ -101,20 +103,37 @@ const Profile = () => {
     }
   };
 
-  const handlerSignedOut = async()=>{
+  const handlerSignedOut = async () => {
     try {
-        dispatch(userSignOutStart())
-        const res = await fetch("/api/auth/signout");
-        const data= await res.json();
-        if(data.success === false) {
-          dispatch(userSignOutFailure(data.message));
-          return;
-        }
-        dispatch(userSignOutSuccess(data));
+      dispatch(userSignOutStart());
+      const res = await fetch("/api/auth/signout");
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(userSignOutFailure(data.message));
+        return;
+      }
+      dispatch(userSignOutSuccess(data));
     } catch (error) {
       dispatch(userSignOutFailure(error.message));
     }
-  }
+  };
+
+  const handleShowListing = async () => {
+    try {
+      setListingError(false);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+
+      if (data.success === false) {
+        setListingError(true);
+        return;
+      }
+      setUserListings(data);
+      setListingError(false);
+    } catch (error) {
+      setListingError(true);
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -177,7 +196,12 @@ const Profile = () => {
         >
           {loading ? "Loading..." : "Update"}
         </button>
-        <Link to={'/create-listing'} className="border p-3 bg-green-600 text-white text-center uppercase hover:opacity-90">Create Listing</Link>
+        <Link
+          to={"/create-listing"}
+          className="border p-3 bg-green-600 text-white text-center uppercase hover:opacity-90"
+        >
+          Create Listing
+        </Link>
       </form>
       <div className="flex justify-between m-5">
         <span
@@ -186,11 +210,54 @@ const Profile = () => {
         >
           Delete account
         </span>
-        <span onClick={handlerSignedOut} className="text-red-700 cursor-pointer">Sign-out</span>
+        <span
+          onClick={handlerSignedOut}
+          className="text-red-700 cursor-pointer"
+        >
+          Sign-out
+        </span>
       </div>
       <p className="text-green-700 mt-5">
         {updateSuccess ? "User is Updated Successfullly! " : ""}
       </p>
+      <button
+        onClick={handleShowListing}
+        className="text-green-600 w-full hover:underline"
+      >
+        Show Listings
+      </button>
+      <p className="text-red-700 mt-5">
+        {showListingError ? "Error showing Listing" : ""}
+      </p>
+
+      {userListings &&
+        userListings.length > 0 &&
+        <div className=" flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-2xl font-semibold">Your Listings</h1>
+          {userListings.map((listing) => (
+          <div
+            key={listing._id}
+            className="border rounded-lg p-3 flex justify-between items-center gap-4"
+          >
+            <Link to={`/listings/${listing._id}`}>
+              <img
+                className="h-16 w-16 object-contain"
+                src={listing.imageUrls[0]}
+                alt="listing image"
+              />
+            </Link>
+            <Link className="text-slate-700 font-semibold flex-1 hover:underline truncate"   to={`/listings/${listing._id}`}>
+              <p>{listing.name}</p>
+            </Link>
+
+            <div className="flex flex-col items-center">
+              <button className="text-red-600 uppercase">Delete</button>
+              <button className="text-green-600 uppercase ">Delete</button>
+            </div>
+          </div>
+        ))}
+        </div>}
+        
     </div>
   );
 };

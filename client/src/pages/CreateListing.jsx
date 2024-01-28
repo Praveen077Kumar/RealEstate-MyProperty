@@ -33,8 +33,7 @@ export default function CreateListing() {
   const [imageUploadErrors, setImageUploadErrors] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  console.log(formData, "formdata");
-
+  
   const handleImageUpload = async (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
